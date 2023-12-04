@@ -9,7 +9,42 @@ struct EncodeElement
     int value[5];
 };
 
-char *encode(int start, int array[])
+void toBinary(int array[], int len)
+{
+    int max = 0, min = 0, mid = 0;
+    if (array[0] > array[1])
+    {
+        max = array[0];
+        min = array[1];
+    }
+    else
+    {
+        max = array[1];
+        min = array[0];
+    }
+    for (size_t i = 2; i < len; i++)
+    {
+        if (array[i] > max)
+        {
+            max = array[i];
+        }
+        else if (array[i] < min)
+        {
+            min = array[i];
+        }
+    }
+    mid = (max + min) / 2;
+
+    for (size_t i = 0; i < len; i++)
+    {
+        if (array[i] < mid)
+            array[i] = 0;
+        else if (array[i] > mid)
+            array[i] = 1;
+    }
+}
+
+char *searchTable(int start, int array[])
 {
     const struct EncodeElement table[] = {
         {"1", {1, 0, 0, 0, 1}},
@@ -48,7 +83,7 @@ char *encode(int start, int array[])
 
 bool fixCodeDirection(int array[], int size)
 {
-    char *firstEle = encode(0, array);
+    char *firstEle = searchTable(0, array);
     if (firstEle == NULL)
     {
         return false;
@@ -72,6 +107,26 @@ bool fixCodeDirection(int array[], int size)
     return true;
 }
 
+char *decoding(int array[], int len)
+{
+    char *result;
+    for (size_t x = 0; x < len / 5; x++)
+    {
+        for (size_t y = 0; y < 5; y++)
+        {
+            char *element = searchTable(5 * x + y, array);
+            if (element != NULL)
+            {
+                // 重新分配内存，确保足够容纳新的字符串
+                result = (char *)realloc(result, strlen(result) +
+                                                     strlen(element) + 1);
+                strcat(result, element);
+            }
+        }
+    }
+    return result;
+}
+
 int main()
 {
     int *code;
@@ -83,5 +138,13 @@ int main()
     for (size_t i = 0; i < codeLen; i++)
     {
         scanf("%d", &code[i]);
+    }
+
+    toBinary(code, codeLen);
+
+    if (fixCodeDirection(code, codeLen))
+    {
+        char *decodingResult = decoding(code, codeLen);
+        printf("%s\n", decodingResult);
     }
 }
