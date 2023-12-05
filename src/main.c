@@ -129,7 +129,9 @@ void fixCodeDirection(int array[], int size)
 int decoding(int array[], int len, int resultNoCorrectCode[])
 {
     int strCount = ((len + 1) / 6) - 2;
+    int resultSize = ((len + 1) / 6) - 4;
     int *result = (int *)malloc(strCount * sizeof(int));
+    int *reverse = (int *)malloc(resultSize * sizeof(int));
 
     for (int x = 0; x < strCount; x++)
     {
@@ -141,40 +143,48 @@ int decoding(int array[], int len, int resultNoCorrectCode[])
         }
     }
 
-    for (int x = 0; x < strCount - 2; x++)
+    for (int x = 0; x < resultSize; x++)
     {
         int element = searchTable(5 * (x + 1) + x + 1, array);
 
         if (element != -1)
         {
             resultNoCorrectCode[x] = element;
+            reverse[resultSize - x - 1] = element;
         }
     }
 
-    // for (size_t i = 0; i < strCount; i++)
-    // {
-    //     printf("Result:%d\n", result[i]);
-    // }
+    for (size_t i = 0; i < strCount; i++)
+    {
+        printf("Result:%d\n", result[i]);
+    }
 
-    // printf("\n");
+    printf("\n");
 
-    // for (size_t i = 0; i < strCount - 2; i++)
-    // {
-    //     printf("ResultB:%d\n", resultNoCorrectCode[i]);
-    // }
+    for (size_t i = 0; i < resultSize; i++)
+    {
+        printf("ResultB:%d\n", resultNoCorrectCode[i]);
+    }
 
-    // printf("\n");
+    printf("\n");
 
-    int readC = result[strCount - 2];
+    for (size_t i = 0; i < resultSize; i++)
+    {
+        printf("Reverse:%d\n", reverse[i]);
+    }
+
+    printf("\n");
+
+    int readC = result[resultSize];
     int readK = result[strCount - 1];
-    // printf("Read C:%d\n", readC);
-    // printf("Read K:%d\n", readK);
+    printf("Read C:%d\n", readC);
+    printf("Read K:%d\n", readK);
 
     int sumC = 0;
     int countWeightC = 1;
-    for (size_t i = 0; i < strCount - 2; i++)
+    for (size_t i = 0; i < resultSize; i++)
     {
-        sumC += resultNoCorrectCode[i] * countWeightC;
+        sumC += (reverse[i] * countWeightC);
         if (countWeightC == 10)
         {
             countWeightC = 1;
@@ -185,18 +195,18 @@ int decoding(int array[], int len, int resultNoCorrectCode[])
         }
     }
     int c = sumC % 11;
+    printf("%d\n", sumC);
+    printf("%d\n", c);
     if (c != readC)
     {
         return -1;
     }
 
-    // printf("%d\n", c);
-
     int sumK = c;
     int countWeightK = 2;
-    for (size_t i = 0; i < strCount - 2; i++)
+    for (size_t i = 0; i < resultSize; i++)
     {
-        sumK += resultNoCorrectCode[i] * countWeightK;
+        sumK += (reverse[i] * countWeightK);
         if (countWeightK == 9)
         {
             countWeightK = 1;
@@ -207,11 +217,11 @@ int decoding(int array[], int len, int resultNoCorrectCode[])
         }
     }
     int k = sumK % 11;
+    printf("%d\n", k);
     if (k != readK)
     {
         return -2;
     }
-    // printf("%d\n", k);
 
     return 0;
 }
@@ -233,7 +243,7 @@ int main()
 
     if (!toBinary(code, codeLen))
     {
-        printf("Bad code");
+        printf("bad code");
         return -1;
     }
 
@@ -246,12 +256,16 @@ int main()
 
     fixCodeDirection(code, codeLen);
 
-    // for (size_t i = 0; i < codeLen; i++)
-    // {
-    //     printf("%d ", code[i]);
-    // }
+    for (size_t i = 0; i < codeLen; i++)
+    {
+        if (i % 6 == 0)
+        {
+            printf("\n");
+        }
+        printf("%d ", code[i]);
+    }
 
-    // printf("\n");
+    printf("\n");
 
     int indexResult = decoding(code, codeLen, barcodeResult);
     if (indexResult == 0)
