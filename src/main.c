@@ -9,7 +9,7 @@ struct EncodeElement
     int value[5];
 };
 
-void toBinary(int array[], int len)
+bool toBinary(int array[], int len)
 {
     int max = 0, min = 0, mid = 0;
     if (array[0] > array[1])
@@ -33,15 +33,39 @@ void toBinary(int array[], int len)
             min = array[i];
         }
     }
+
     mid = (max + min) / 2;
 
     for (size_t i = 0; i < len; i++)
     {
         if (array[i] < mid)
-            array[i] = 0;
+        {
+            if (array[i] > min * 1.1 || array[i] < min)
+            {
+                return false;
+            }
+            else
+            {
+                array[i] = 0;
+            }
+        }
         else if (array[i] > mid)
-            array[i] = 1;
+        {
+            if (array[i] < max * 0.9 || array[i] > max)
+            {
+                return false;
+            }
+            else
+            {
+                array[i] = 1;
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
+    return true;
 }
 
 char *searchTable(int start, int array[])
@@ -55,18 +79,17 @@ char *searchTable(int start, int array[])
         {"6", {0, 1, 1, 0, 0}},
         {"7", {0, 0, 0, 1, 1}},
         {"8", {1, 0, 0, 1, 0}},
-        {"9", {11, 0, 0, 0, 0}},
-        {"0", {0, 0, 0, 0, 11}},
-        {"-", {0, 0, 11, 0, 0}},
-        {"Start", {0, 0, 1, 1, 0}},
-        {"Stop", {0, 0, 1, 1, 0}}};
+        {"9", {1, 0, 0, 0, 0}},
+        {"0", {0, 0, 0, 0, 1}},
+        {"-", {0, 0, 1, 0, 0}},
+        {"Start/Stop", {0, 0, 1, 1, 0}}};
 
-    for (size_t i = 0; i < 13; i++)
+    for (size_t i = 0; i < 12; i++)
     {
         bool same = true;
         for (size_t j = 0; j < 5; j++)
         {
-            if (table[i].value[j] != array[j])
+            if (table[i].value[j] != array[start + j])
             {
                 same = false;
                 break;
@@ -81,14 +104,11 @@ char *searchTable(int start, int array[])
     return NULL;
 }
 
-bool fixCodeDirection(int array[], int size)
+void fixCodeDirection(int array[], int size)
 {
     char *firstEle = searchTable(0, array);
-    if (firstEle == NULL)
-    {
-        return false;
-    }
-    if (firstEle != "Start")
+
+    if (firstEle != "Start/Stop")
     {
         int start = 0;
         int end = size - 1;
@@ -104,24 +124,18 @@ bool fixCodeDirection(int array[], int size)
             end--;
         }
     }
-    return true;
 }
 
-char *decoding(int array[], int len)
+char **decoding(int array[], int len)
 {
-    char *result;
-    for (size_t x = 0; x < len / 5; x++)
+    char **result = (char **)malloc((len + 1) / 6 * sizeof(char *));
+    for (int x = 0; x < (len + 1) / 6; x++)
     {
-        for (size_t y = 0; y < 5; y++)
+        char *element = searchTable(5 * x + x, array);
+
+        if (element != NULL)
         {
-            char *element = searchTable(5 * x + y, array);
-            if (element != NULL)
-            {
-                // 重新分配内存，确保足够容纳新的字符串
-                result = (char *)realloc(result, strlen(result) +
-                                                     strlen(element) + 1);
-                strcat(result, element);
-            }
+            result[x] = element;
         }
     }
     return result;
@@ -140,11 +154,31 @@ int main()
         scanf("%d", &code[i]);
     }
 
-    toBinary(code, codeLen);
-
-    if (fixCodeDirection(code, codeLen))
+    if (!toBinary(code, codeLen))
     {
-        char *decodingResult = decoding(code, codeLen);
-        printf("%s\n", decodingResult);
+        printf("Bad code");
+        return -1;
+    }
+
+    for (size_t i = 0; i < codeLen; i++)
+    {
+        printf("%d ", code[i]);
+    }
+
+    printf("\n");
+
+    fixCodeDirection(code, codeLen);
+
+    for (size_t i = 0; i < codeLen; i++)
+    {
+        printf("%d ", code[i]);
+    }
+
+    printf("\n");
+
+    char **decodingResult = decoding(code, codeLen);
+    for (size_t i = 0; i < (codeLen + 1) / 6; i++)
+    {
+        printf("Result:%s\n", decodingResult[i]);
     }
 }
