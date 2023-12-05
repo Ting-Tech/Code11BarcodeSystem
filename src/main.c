@@ -154,31 +154,31 @@ int decoding(int array[], int len, int resultNoCorrectCode[])
         }
     }
 
-    for (size_t i = 0; i < strCount; i++)
-    {
-        printf("Result:%d\n", result[i]);
-    }
+    // for (size_t i = 0; i < strCount; i++)
+    // {
+    //     printf("Result:%d\n", result[i]);
+    // }
 
-    printf("\n");
+    // printf("\n");
 
-    for (size_t i = 0; i < resultSize; i++)
-    {
-        printf("ResultB:%d\n", resultNoCorrectCode[i]);
-    }
+    // for (size_t i = 0; i < resultSize; i++)
+    // {
+    //     printf("ResultB:%d\n", resultNoCorrectCode[i]);
+    // }
 
-    printf("\n");
+    // printf("\n");
 
-    for (size_t i = 0; i < resultSize; i++)
-    {
-        printf("Reverse:%d\n", reverse[i]);
-    }
+    // for (size_t i = 0; i < resultSize; i++)
+    // {
+    //     printf("Reverse:%d\n", reverse[i]);
+    // }
 
-    printf("\n");
+    // printf("\n");
 
     int readC = result[resultSize];
     int readK = result[strCount - 1];
-    printf("Read C:%d\n", readC);
-    printf("Read K:%d\n", readK);
+    // printf("Read C:%d\n", readC);
+    // printf("Read K:%d\n", readK);
 
     int sumC = 0;
     int countWeightC = 1;
@@ -195,8 +195,7 @@ int decoding(int array[], int len, int resultNoCorrectCode[])
         }
     }
     int c = sumC % 11;
-    printf("%d\n", sumC);
-    printf("%d\n", c);
+    // printf("%d\n", c);
     if (c != readC)
     {
         return -1;
@@ -217,7 +216,7 @@ int decoding(int array[], int len, int resultNoCorrectCode[])
         }
     }
     int k = sumK % 11;
-    printf("%d\n", k);
+    // printf("%d\n", k);
     if (k != readK)
     {
         return -2;
@@ -256,16 +255,16 @@ int main()
 
     fixCodeDirection(code, codeLen);
 
-    for (size_t i = 0; i < codeLen; i++)
-    {
-        if (i % 6 == 0)
-        {
-            printf("\n");
-        }
-        printf("%d ", code[i]);
-    }
+    // for (size_t i = 0; i < codeLen; i++)
+    // {
+    //     if (i % 6 == 0)
+    //     {
+    //         printf("\n");
+    //     }
+    //     printf("%d ", code[i]);
+    // }
 
-    printf("\n");
+    // printf("\n");
 
     int indexResult = decoding(code, codeLen, barcodeResult);
     if (indexResult == 0)
