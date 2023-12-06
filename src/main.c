@@ -227,67 +227,89 @@ int decoding(int array[], int len, int resultNoCorrectCode[])
 
 int main()
 {
-    int *code;
-    int *barcodeResult;
-    int codeLen = 0;
-
-    scanf("%d", &codeLen);
-    code = (int *)malloc(codeLen * sizeof(int));
-    barcodeResult = (int *)malloc((((codeLen + 1) / 6) - 4) * sizeof(int));
-
-    for (size_t i = 0; i < codeLen; i++)
+    int codeLen = -1;
+    int **barcodeResult;
+    int indexResult[20] = {0};
+    int size=0;
+    int sizearr[20]={0};
+    barcodeResult = (int **)malloc(20 * sizeof(int));   //(((codeLen + 1) / 6) - 4)
+    for(size = 0; ;size++)
     {
-        scanf("%d", &code[i]);
-    }
+        codeLen = -1;
+        int *code;
 
-    if (!toBinary(code, codeLen))
-    {
-        printf("bad code");
-        return -1;
-    }
-
-    // for (size_t i = 0; i < codeLen; i++)
-    // {
-    //     printf("%d ", code[i]);
-    // }
-
-    // printf("\n");
-
-    fixCodeDirection(code, codeLen);
-
-    // for (size_t i = 0; i < codeLen; i++)
-    // {
-    //     if (i % 6 == 0)
-    //     {
-    //         printf("\n");
-    //     }
-    //     printf("%d ", code[i]);
-    // }
-
-    // printf("\n");
-
-    int indexResult = decoding(code, codeLen, barcodeResult);
-    if (indexResult == 0)
-    {
-        for (size_t a = 0; a < (((codeLen + 1) / 6) - 4); a++)
+        scanf("%d", &codeLen);
+        sizearr[size]=codeLen;
+        barcodeResult[size] = (int *)malloc((((codeLen + 1) / 6) - 4) * sizeof(int));
+        if(codeLen == 0)
         {
-            if (barcodeResult[a] == 10)
+            break;
+        }
+        code = (int *)malloc(codeLen * sizeof(int));
+        size_t j = 0;
+        for (j = 0; j < codeLen; j++)
+        {
+            scanf("%d", &code[j]);
+        }
+        printf("\n");
+        if (toBinary(code, codeLen)==false)
+        {
+            indexResult[size]=-3;
+            continue;
+        }
+
+        // for (size_t i = 0; i < codeLen; i++)
+        // {
+        //     printf("%d ", code[i]);
+        // }
+
+        // printf("\n");
+
+        fixCodeDirection(code, codeLen);
+
+        // for (size_t i = 0; i < codeLen; i++)
+        // {
+        //     if (i % 6 == 0)
+        //     {
+        //         printf("\n");
+        //     }
+        //     printf("%d ", code[i]);
+        // }
+
+        // printf("\n");
+        indexResult[size]=decoding(code, codeLen, barcodeResult[size]);
+    }
+    //printf("%d",indexResult[0]);
+    for(size_t i = 0; i < size; i++)
+    {
+        printf("Case %d:",i,indexResult[i]);
+        if (indexResult[i] == 0)
+        {
+            for (size_t a = 0; a < ((( sizearr[i] + 1) / 6) - 4); a++)
             {
-                printf("-");
-            }
-            else
-            {
-                printf("%d", barcodeResult[a]);
+                if (barcodeResult[i][a] == 10)
+                {
+                    printf("-");
+                }
+                else
+                {
+                    printf("%d", barcodeResult[i][a]);
+                }
             }
         }
-    }
-    else if (indexResult == -1)
-    {
-        printf("bad C");
-    }
-    else if (indexResult == -2)
-    {
-        printf("bad K");
+        else if (indexResult[i] == -1)
+        {
+            printf("bad C");
+        }
+        else if (indexResult[i] == -2)
+        {
+            printf("bad K");
+        }
+        else if (indexResult[i] == -3)
+        {
+            printf("bad code");
+        }
+        printf("\n");
     }
     return 0;
 }
