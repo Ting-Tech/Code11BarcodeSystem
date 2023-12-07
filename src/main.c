@@ -22,7 +22,7 @@ bool toBinary(int array[], int len)
         max = array[1];
         min = array[0];
     }
-    for (size_t i = 2; i < len; i++)
+    for (int i = 2; i < len; i++)
     {
         if (array[i] > max)
         {
@@ -36,7 +36,7 @@ bool toBinary(int array[], int len)
 
     mid = (max + min) / 2;
 
-    for (size_t i = 0; i < len; i++)
+    for (int i = 0; i < len; i++)
     {
         if (array[i] < mid)
         {
@@ -182,7 +182,7 @@ int decoding(int array[], int len, int resultNoCorrectCode[])
 
     int sumC = 0;
     int countWeightC = 1;
-    for (size_t i = 0; i < resultSize; i++)
+    for (int i = 0; i < resultSize; i++)
     {
         sumC += (reverse[i] * countWeightC);
         if (countWeightC == 10)
@@ -203,7 +203,7 @@ int decoding(int array[], int len, int resultNoCorrectCode[])
 
     int sumK = c;
     int countWeightK = 2;
-    for (size_t i = 0; i < resultSize; i++)
+    for (int i = 0; i < resultSize; i++)
     {
         sumK += (reverse[i] * countWeightK);
         if (countWeightK == 9)
@@ -225,6 +225,14 @@ int decoding(int array[], int len, int resultNoCorrectCode[])
     return 0;
 }
 
+
+int openfile(FILE *fp)
+{
+    int x=0;
+    fscanf(fp, "%d", &x);
+    return x;
+}
+
 int main()
 {
     int codeLen = -1;
@@ -233,12 +241,17 @@ int main()
     int size=0;
     int sizearr[20]={0};
     barcodeResult = (int **)malloc(20 * sizeof(int));   //(((codeLen + 1) / 6) - 4)
+    FILE *fp=fopen("test.txt", "r");  //開啟檔案
+    if (ferror(fp))
+    {
+        printf("讀取時發生錯誤");
+    }
     for(size = 0; ;size++)
     {
         codeLen = -1;
         int *code;
 
-        scanf("%d", &codeLen);
+        codeLen=openfile(fp);      //scanf("%d", &codeLen);
         sizearr[size]=codeLen;
         barcodeResult[size] = (int *)malloc((((codeLen + 1) / 6) - 4) * sizeof(int));
         if(codeLen == 0)
@@ -246,12 +259,12 @@ int main()
             break;
         }
         code = (int *)malloc(codeLen * sizeof(int));
-        size_t j = 0;
+        int j = 0;
         for (j = 0; j < codeLen; j++)
         {
-            scanf("%d", &code[j]);
+            code[j]=openfile(fp);      //scanf("%d", &code[j]);
         }
-        printf("\n");
+        //printf("\n");
         if (toBinary(code, codeLen)==false)
         {
             indexResult[size]=-3;
@@ -280,12 +293,12 @@ int main()
         indexResult[size]=decoding(code, codeLen, barcodeResult[size]);
     }
     //printf("%d",indexResult[0]);
-    for(size_t i = 0; i < size; i++)
+    for(int i = 0; i < size; i++)
     {
-        printf("Case %d:",i,indexResult[i]);
+        printf("Case %d:",i);
         if (indexResult[i] == 0)
         {
-            for (size_t a = 0; a < ((( sizearr[i] + 1) / 6) - 4); a++)
+            for (int a = 0; a < ((( sizearr[i] + 1) / 6) - 4); a++)
             {
                 if (barcodeResult[i][a] == 10)
                 {
