@@ -18,13 +18,15 @@ int main()
         }
     }
     int s=0;
+    printf ("input value:");
     scanf("%d",&s);
     i=i+1;
     int* code=calculate_C_K(input,i);
+    printf("C:%d\tK:%d\n",code[i],code[i+1]);
     i=i+2;
     int* output=encoding(code,i);
     int row=0;
-
+    printf("\n%d\n",(i+2)*6-1);
     for(int r=0;r<(i+2)*6-1;r++)
     {
         printf("%d ",(output[r]+1)*s);
