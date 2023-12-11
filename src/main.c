@@ -233,6 +233,42 @@ int openfile(FILE *fp)
     return x;
 }
 
+int verify(int code[],int len)
+{
+    int start=searchTable(0,code);
+    int end=searchTable(len-5,code);
+    if(start==11&&end==11)
+    {
+        return 1;
+    }
+    else
+    {
+        return -1;
+    }
+}
+
+int space_check(int code[],int len)
+{
+    int x=1;
+    for(int i=5;i<len;i=i+6)
+    {
+        if(code[i]==1)
+        {
+            x=0;
+            break;
+        }
+    }
+    if(x==1)
+    {
+        return 1;
+    }
+    else
+    {
+        return -1;
+    }
+}
+
+
 int main()
 {
     int codeLen = -1;
@@ -270,7 +306,6 @@ int main()
             indexResult[size]=-3;
             continue;
         }
-
         // for (size_t i = 0; i < codeLen; i++)
         // {
         //     printf("%d ", code[i]);
@@ -290,7 +325,14 @@ int main()
         // }
 
         // printf("\n");
-        indexResult[size]=decoding(code, codeLen, barcodeResult[size]);
+        if(verify(code, codeLen)==1&&space_check(code, codeLen)==1)
+        {
+            indexResult[size]=decoding(code, codeLen, barcodeResult[size]);
+        }
+        else
+        {
+            indexResult[size]=-3;
+        }
     }
     //printf("%d",indexResult[0]);
     for(int i = 0; i < size; i++)
