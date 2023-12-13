@@ -268,6 +268,29 @@ int space_check(int code[],int len)
     }
 }
 
+int quantity_check(FILE *fp)
+{
+    char c1=fgetc(fp);
+    char c2=fgetc(fp);
+    if(c1=='\n'&&c2=='\n')
+    {
+        return 1;
+    }
+    else
+    {
+        for(int j = 0;;j++)
+        {
+            c2=fgetc(fp);
+            if(c1=='\n'&&c2=='\n')
+            {
+                break;
+            }
+            c1=c2;
+        }
+        return -1;
+    }
+
+}
 
 int main()
 {
@@ -296,12 +319,14 @@ int main()
         }
         code = (int *)malloc(codeLen * sizeof(int));
         int j = 0;
+        int n=0;
         for (j = 0; j < codeLen; j++)
         {
             code[j]=openfile(fp);      //scanf("%d", &code[j]);
+            n=n+1;
         }
         //printf("\n");
-        if (toBinary(code, codeLen)==false)
+        if (toBinary(code, codeLen)==false||quantity_check(fp)==-1)
         {
             indexResult[size]=-3;
             continue;
