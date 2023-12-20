@@ -1,0 +1,20 @@
+1	narrow bar:90	bad code (間隔是大數字)
+2	narrow bar:82	214-91470673328-
+3	narrow bar:55	648-5-264
+4	narrow bar:80	bad C
+5	narrow bar:66	7-5405--85939
+6	narrow bar:39	bad K
+7	narrow bar:42	87203
+8	narrow bar:52	372251852785612
+9	narrow bar:30	843207343444818321648
+10	narrow bar:73	bad C
+11	narrow bar:87	bad K
+12	narrow bar:77	bad code (超過5%)
+13	narrow bar:81	6734589906-7
+14	narrow bar:54	bad code (長度不對)
+15	narrow bar:77	4127-26-8-97-7-
+16	narrow bar:43	bad K
+17	narrow bar:83	bad code (超過5%)
+18	narrow bar:69	bad C
+19	narrow bar:65	49445
+20	narrow bar:51	bad code (code不存在00000)

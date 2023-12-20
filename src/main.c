@@ -33,15 +33,17 @@ bool toBinary(int array[], int len)
             min = array[i];
         }
     }
-
     mid = (max + min) / 2;
-
+    //printf("%d %d ",max,min);
+    //int min_s=min*0.05; printf("%d ", min);
+    //int max_s=max*0.05; printf("%d\n",max);
     for (int i = 0; i < len; i++)
     {
         if (array[i] < mid)
         {
-            if (array[i] > min * 1.1 || array[i] < min)
+            if (array[i] > min *1.11|| array[i] < min)
             {
+                //printf("min%d\n",array[i]);
                 return false;
             }
             else
@@ -51,8 +53,9 @@ bool toBinary(int array[], int len)
         }
         else if (array[i] > mid)
         {
-            if (array[i] < max * 0.9 || array[i] > max)
+            if (array[i] < max  * 0.89 || array[i] > max)
             {
+                //printf("max%d\n",array[i]);
                 return false;
             }
             else
@@ -154,34 +157,11 @@ int decoding(int array[], int len, int resultNoCorrectCode[])
         }
     }
 
-    // for (size_t i = 0; i < strCount; i++)
-    // {
-    //     printf("Result:%d\n", result[i]);
-    // }
-
-    // printf("\n");
-
-    // for (size_t i = 0; i < resultSize; i++)
-    // {
-    //     printf("ResultB:%d\n", resultNoCorrectCode[i]);
-    // }
-
-    // printf("\n");
-
-    // for (size_t i = 0; i < resultSize; i++)
-    // {
-    //     printf("Reverse:%d\n", reverse[i]);
-    // }
-
-    // printf("\n");
-
     int readC = result[resultSize];
     int readK = result[strCount - 1];
-    // printf("Read C:%d\n", readC);
-    // printf("Read K:%d\n", readK);
-
     int sumC = 0;
     int countWeightC = 1;
+
     for (int i = 0; i < resultSize; i++)
     {
         sumC += (reverse[i] * countWeightC);
@@ -195,7 +175,7 @@ int decoding(int array[], int len, int resultNoCorrectCode[])
         }
     }
     int c = sumC % 11;
-    // printf("%d\n", c);
+
     if (c != readC)
     {
         return -1;
@@ -216,7 +196,7 @@ int decoding(int array[], int len, int resultNoCorrectCode[])
         }
     }
     int k = sumK % 11;
-    // printf("%d\n", k);
+
     if (k != readK)
     {
         return -2;
@@ -224,7 +204,6 @@ int decoding(int array[], int len, int resultNoCorrectCode[])
 
     return 0;
 }
-
 
 int openfile(FILE *fp)
 {
@@ -289,28 +268,23 @@ int quantity_check(FILE *fp)
         }
         return -1;
     }
-
 }
 
 int main()
 {
     int codeLen = -1;
     int **barcodeResult;
-    int indexResult[20] = {0};
+    int indexResult[100] = {0};
     int size=0;
-    int sizearr[20]={0};
-    barcodeResult = (int **)malloc(20 * sizeof(int));   //(((codeLen + 1) / 6) - 4)
-    FILE *fp=fopen("test.txt", "r");  //開啟檔案
-    if (ferror(fp))
-    {
-        printf("讀取時發生錯誤");
-    }
+    int sizearr[100]={0};
+    barcodeResult = (int **)malloc(100 * sizeof(int));
+    FILE *fp=fopen("test.txt", "r");  //open file
     for(size = 0; ;size++)
     {
         codeLen = -1;
         int *code;
 
-        codeLen=openfile(fp);      //scanf("%d", &codeLen);
+        codeLen=openfile(fp);
         sizearr[size]=codeLen;
         barcodeResult[size] = (int *)malloc((((codeLen + 1) / 6) - 4) * sizeof(int));
         if(codeLen == 0)
@@ -322,35 +296,18 @@ int main()
         int n=0;
         for (j = 0; j < codeLen; j++)
         {
-            code[j]=openfile(fp);      //scanf("%d", &code[j]);
+            code[j]=openfile(fp);
             n=n+1;
         }
-        //printf("\n");
-        if (toBinary(code, codeLen)==false||quantity_check(fp)==-1)
+        if (toBinary(code, codeLen)==false)  //||quantity_check(fp)==-1
         {
+
             indexResult[size]=-3;
             continue;
         }
-        // for (size_t i = 0; i < codeLen; i++)
-        // {
-        //     printf("%d ", code[i]);
-        // }
-
-        // printf("\n");
-
         fixCodeDirection(code, codeLen);
 
-        // for (size_t i = 0; i < codeLen; i++)
-        // {
-        //     if (i % 6 == 0)
-        //     {
-        //         printf("\n");
-        //     }
-        //     printf("%d ", code[i]);
-        // }
-
-        // printf("\n");
-        if(verify(code, codeLen)==1&&space_check(code, codeLen)==1)
+        if(verify(code, codeLen)==1)//&&space_check(code, codeLen)==1
         {
             indexResult[size]=decoding(code, codeLen, barcodeResult[size]);
         }
@@ -359,10 +316,10 @@ int main()
             indexResult[size]=-3;
         }
     }
-    //printf("%d",indexResult[0]);
+
     for(int i = 0; i < size; i++)
     {
-        printf("Case %d:",i);
+        printf("Case %d:",i+1);
         if (indexResult[i] == 0)
         {
             for (int a = 0; a < ((( sizearr[i] + 1) / 6) - 4); a++)
